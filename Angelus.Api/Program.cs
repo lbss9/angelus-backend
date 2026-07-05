@@ -8,8 +8,19 @@ using Angelus.Application.Characters.Queries;
 using Angelus.Api.Hubs;
 using Angelus.Infrastructure;
 using Angelus.Infrastructure.Data;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, services, config) =>
+    config.ReadFrom.Configuration(ctx.Configuration)
+          .ReadFrom.Services(services)
+          .Enrich.FromLogContext()
+          .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"));
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -61,15 +72,31 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(r => r.AddService("angelus-api"))
+    .WithTracing(t => t
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation())
+    .WithMetrics(m => m
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddPrometheusExporter());
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+    if (env.IsEnvironment("Test"))
+        await dbContext.Database.EnsureCreatedAsync();
+    else
+        await dbContext.Database.MigrateAsync();
 }
 
 app.MapOpenApi();
+app.MapPrometheusScrapingEndpoint(); // /metrics para Prometheus/Grafana
+app.UseSerilogRequestLogging();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -77,3 +104,5 @@ app.MapControllers();
 app.MapHub<GameHub>("/gamehub");
 
 app.Run();
+
+public partial class Program { }
