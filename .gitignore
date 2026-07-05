@@ -1,0 +1,21 @@
+# Build output
+bin/
+obj/
+out/
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Environment secrets
+appsettings.Development.json
+*.env
+.env
+
+# Docker volumes
+postgres_data/
+
+# Test results
+TestResults/
+coverage/

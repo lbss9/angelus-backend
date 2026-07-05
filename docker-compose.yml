@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: principados
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Principados.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=principados;Username=postgres;Password=postgres"
+      Jwt__Secret: "TROQUE_ESTA_CHAVE_POR_UMA_SEGURA_COM_32_CHARS_MINIMO"
+      Jwt__Issuer: "game-server"
+      Jwt__Audience: "game-client"
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
