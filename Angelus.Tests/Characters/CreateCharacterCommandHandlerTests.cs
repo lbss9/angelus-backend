@@ -41,7 +41,7 @@ public class CreateCharacterCommandHandlerTests
         );
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Contain("inválido");
+        result.Error!.Message.Should().Contain("inválido");
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class CreateCharacterCommandHandlerTests
         );
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Contain("já possui");
+        result.Error!.Message.Should().Contain("já possui");
     }
 
     [Fact]
@@ -68,6 +68,6 @@ public class CreateCharacterCommandHandlerTests
         );
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Contain("nome");
+        result.Error!.Message.Should().Contain("nome");
     }
 }

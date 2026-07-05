@@ -1,4 +1,5 @@
 using System.Text;
+using Angelus.Api.Common;
 using Angelus.Api.Hubs;
 using Angelus.Application.Auth.Commands;
 using Angelus.Application.Characters.Commands;
@@ -28,6 +29,10 @@ builder.Host.UseSerilog(
 );
 
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Tratamento global de exceções → contrato ApiError
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Handlers CQRS
 builder.Services.AddScoped<RegisterCommandHandler>();
@@ -107,6 +112,22 @@ using (var scope = app.Services.CreateScope())
     var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
     await dbContext.Database.EnsureCreatedAsync();
 }
+
+// Exceções não tratadas → ApiError com status 500 (deve vir primeiro no pipeline)
+app.UseExceptionHandler();
+
+// Status gerados pelo framework sem corpo (401 sem token, 404 rota inexistente) → ApiError
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+
+    // Só formata respostas de erro que ainda não têm corpo próprio
+    if (response.HasStarted || !string.IsNullOrEmpty(response.ContentType))
+        return;
+
+    var error = ApiError.FromStatus(response.StatusCode, context.HttpContext.Request.Path);
+    await response.WriteAsJsonAsync(error);
+});
 
 app.MapOpenApi();
 app.MapPrometheusScrapingEndpoint(); // /metrics para Prometheus/Grafana

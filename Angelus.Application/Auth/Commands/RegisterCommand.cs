@@ -16,10 +16,14 @@ public class RegisterCommandHandler(IUserRepository userRepository, IJwtService 
     {
         var validation = await _validator.ValidateAsync(command);
         if (!validation.IsValid)
-            return Result<AuthResponse>.Failure(validation.Errors[0].ErrorMessage);
+            return Result<AuthResponse>.Failure(
+                Error.Validation(validation.Errors[0].ErrorMessage)
+            );
 
         if (await userRepository.ExistsByEmailAsync(command.Email))
-            return Result<AuthResponse>.Failure("Email já cadastrado.");
+            return Result<AuthResponse>.Failure(
+                Error.Conflict("Email já cadastrado.", "EMAIL_ALREADY_EXISTS")
+            );
 
         var user = new User
         {

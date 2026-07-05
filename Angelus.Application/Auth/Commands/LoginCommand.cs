@@ -14,7 +14,9 @@ public class LoginCommandHandler(IUserRepository userRepository, IJwtService jwt
         var user = await userRepository.GetByEmailAsync(command.Email);
 
         if (user is null || !BCrypt.Net.BCrypt.Verify(command.Password, user.PasswordHash))
-            return Result<AuthResponse>.Failure("Email ou senha inválidos.");
+            return Result<AuthResponse>.Failure(
+                Error.Unauthorized("Email ou senha inválidos.", "INVALID_CREDENTIALS")
+            );
 
         var token = jwtService.GenerateToken(user);
         return Result<AuthResponse>.Success(new AuthResponse(token, user.Id));

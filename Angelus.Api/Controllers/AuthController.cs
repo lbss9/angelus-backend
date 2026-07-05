@@ -1,3 +1,4 @@
+using Angelus.Api.Common;
 using Angelus.Application.Auth.Commands;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class AuthController(
             new RegisterCommand(request.Email, request.Password)
         );
         if (!result.IsSuccess)
-            return Conflict(new { message = result.Error });
+            return result.Error!.ToActionResult(HttpContext);
 
         return Ok(result.Value);
     }
@@ -31,7 +32,7 @@ public class AuthController(
             new LoginCommand(request.Email, request.Password)
         );
         if (!result.IsSuccess)
-            return Unauthorized(new { message = result.Error });
+            return result.Error!.ToActionResult(HttpContext);
 
         return Ok(result.Value);
     }

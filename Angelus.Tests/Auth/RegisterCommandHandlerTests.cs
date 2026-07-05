@@ -43,6 +43,7 @@ public class RegisterCommandHandlerTests
         );
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Email já cadastrado.");
+        result.Error!.Message.Should().Be("Email já cadastrado.");
+        result.Error.Code.Should().Be("EMAIL_ALREADY_EXISTS");
     }
 }

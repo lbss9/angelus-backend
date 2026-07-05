@@ -51,7 +51,7 @@ public class CharacterIntegrationTests(AngelusWebAppFactory factory)
     }
 
     [Fact]
-    public async Task CreateCharacter_InvalidAngelType_Returns409()
+    public async Task CreateCharacter_InvalidAngelType_Returns400()
     {
         var token = await RegisterAndLoginAsync("invalid@angelus.com");
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -64,7 +64,7 @@ public class CharacterIntegrationTests(AngelusWebAppFactory factory)
             new { name = "Serafim", angelType = "fogo" }
         );
 
-        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]

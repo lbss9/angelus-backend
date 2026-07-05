@@ -15,14 +15,21 @@ public class CreateCharacterCommandHandler(ICharacterRepository characterReposit
     {
         if (!ValidAngelTypes.Contains(command.AngelType))
             return Result<CharacterResponse>.Failure(
-                "Tipo de anjinho inválido. Use: sol, lua ou rosa."
+                Error.Validation(
+                    "Tipo de anjinho inválido. Use: sol, lua ou rosa.",
+                    "INVALID_ANGEL_TYPE"
+                )
             );
 
         if (await characterRepository.UserHasCharacterAsync(command.UserId))
-            return Result<CharacterResponse>.Failure("Você já possui um personagem.");
+            return Result<CharacterResponse>.Failure(
+                Error.Conflict("Você já possui um personagem.", "CHARACTER_ALREADY_EXISTS")
+            );
 
         if (await characterRepository.ExistsByNameAsync(command.Name))
-            return Result<CharacterResponse>.Failure("Este nome já está em uso.");
+            return Result<CharacterResponse>.Failure(
+                Error.Conflict("Este nome já está em uso.", "NAME_ALREADY_TAKEN")
+            );
 
         var character = new Character
         {

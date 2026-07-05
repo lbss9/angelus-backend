@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Angelus.Api.Common;
 using Angelus.Application.Characters.Commands;
 using Angelus.Application.Characters.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,7 @@ public class CharacterController(
         );
 
         if (!result.IsSuccess)
-            return Conflict(new { message = result.Error });
+            return result.Error!.ToActionResult(HttpContext);
 
         return Created($"/api/characters/{result.Value!.Id}", result.Value);
     }
@@ -43,7 +44,7 @@ public class CharacterController(
             new DeleteCharacterCommand(UserId, id)
         );
         if (!result.IsSuccess)
-            return NotFound(new { message = result.Error });
+            return result.Error!.ToActionResult(HttpContext);
 
         return NoContent();
     }

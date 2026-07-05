@@ -12,7 +12,9 @@ public class DeleteCharacterCommandHandler(ICharacterRepository characterReposit
         var character = await characterRepository.GetByIdAsync(command.CharacterId);
 
         if (character is null || character.UserId != command.UserId)
-            return Result<bool>.Failure("Personagem não encontrado.");
+            return Result<bool>.Failure(
+                Error.NotFound("Personagem não encontrado.", "CHARACTER_NOT_FOUND")
+            );
 
         await characterRepository.DeleteAsync(character);
         return Result<bool>.Success(true);

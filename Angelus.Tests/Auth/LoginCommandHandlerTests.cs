@@ -50,7 +50,8 @@ public class LoginCommandHandlerTests
         );
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Email ou senha inválidos.");
+        result.Error!.Message.Should().Be("Email ou senha inválidos.");
+        result.Error.Code.Should().Be("INVALID_CREDENTIALS");
     }
 
     [Fact]
