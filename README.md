@@ -9,11 +9,11 @@ Backend de um MMORPG web 3D com anjinhos fofos. Projeto de portfólio desenvolvi
 ## Arquitetura
 
 ```
-Principados.Api           ← entrada HTTP (Controllers + SignalR Hub)
-Principados.Infrastructure ← detalhes técnicos (EF Core, JWT, PostgreSQL)
-Principados.Application   ← casos de uso, CQRS (Commands + Queries)
-Principados.Domain        ← entidades e contratos (sem dependências externas)
-Principados.Tests         ← testes unitários (xUnit + Moq + FluentAssertions)
+Angelus.Api           ← entrada HTTP (Controllers + SignalR Hub)
+Angelus.Infrastructure ← detalhes técnicos (EF Core, JWT, PostgreSQL)
+Angelus.Application   ← casos de uso, CQRS (Commands + Queries)
+Angelus.Domain        ← entidades e contratos (sem dependências externas)
+Angelus.Tests         ← testes unitários (xUnit + Moq + FluentAssertions)
 ```
 
 **Fluxo de uma requisição:**

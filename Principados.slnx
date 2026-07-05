@@ -1,7 +1,0 @@
-<Solution>
-  <Project Path="Principados.Api/Principados.Api.csproj" />
-  <Project Path="Principados.Application/Principados.Application.csproj" />
-  <Project Path="Principados.Domain/Principados.Domain.csproj" />
-  <Project Path="Principados.Infrastructure/Principados.Infrastructure.csproj" />
-  <Project Path="Principados.Tests/Principados.Tests.csproj" />
-</Solution>

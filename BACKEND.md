@@ -81,7 +81,7 @@ CreatedAt    (DateTime)
 ## Estrutura de Pastas
 
 ```
-Principados.Api/
+Angelus.Api/
 ├── Controllers/
 │   ├── AuthController.cs
 │   └── CharacterController.cs
@@ -182,7 +182,7 @@ SignalR requer `AllowCredentials`.
 ## Variáveis de Ambiente (docker-compose)
 
 ```
-ConnectionStrings__Default   = Host=db;Port=5432;Database=principados;Username=postgres;Password=postgres
+ConnectionStrings__Default   = Host=db;Port=5432;Database=Angelus;Username=postgres;Password=postgres
 Jwt__Secret                  = chave secreta (min 32 chars)
 Jwt__Issuer                  = game-server
 Jwt__Audience                = game-client
@@ -193,7 +193,7 @@ Jwt__Audience                = game-client
 ## Rodar com Docker
 
 ```bash
-cd Z:\development\Principados.Api
+cd Z:\development\Angelus.Api
 docker compose up --build
 ```
 

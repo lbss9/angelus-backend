@@ -107,7 +107,7 @@ frontend/
 
 **Layout:**
 - Fundo fullscreen com imagem/gradiente de paisagem medieval escura
-- Painel central com logo do jogo "Principados" (fonte Cinzel dourada)
+- Painel central com logo do jogo "Angelus" (fonte Cinzel dourada)
 - Tabs: "Entrar" | "Registrar"
 - Campos: Email + Senha
 - Botão de submit com efeito hover dourado
@@ -413,7 +413,7 @@ Usar sempre `.glb` — inclui modelo + texturas + animações em um único arqui
 | Token storage | `localStorage["token"]` |
 | Character ID | `localStorage["characterId"]` |
 
-> O backend roda via Docker com `docker compose up` no diretório `Principados.Api/`
+> O backend roda via Docker com `docker compose up` no diretório `Angelus.Api/`
 
 ---
 

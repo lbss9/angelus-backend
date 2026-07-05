@@ -1,0 +1,6 @@
+@Angelus.Api_HostAddress = http://localhost:5003
+
+GET {{Angelus.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

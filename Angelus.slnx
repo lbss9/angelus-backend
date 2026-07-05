@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Angelus.Api/Angelus.Api.csproj" />
+  <Project Path="Angelus.Application/Angelus.Application.csproj" />
+  <Project Path="Angelus.Domain/Angelus.Domain.csproj" />
+  <Project Path="Angelus.Infrastructure/Angelus.Infrastructure.csproj" />
+  <Project Path="Angelus.Tests/Angelus.Tests.csproj" />
+</Solution>
