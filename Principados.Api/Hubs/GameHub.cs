@@ -2,20 +2,20 @@ using System.Collections.Concurrent;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Principados.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Principados.Application.Characters.Queries;
 
 namespace Principados.Api.Hubs;
 
 [Authorize]
-public class GameHub(AppDbContext db) : Hub
+public class GameHub(GetCharactersQueryHandler getCharactersHandler) : Hub
 {
     private static readonly ConcurrentDictionary<string, PlayerState> Players = new();
 
     public async Task JoinWorld(Guid characterId)
     {
         var userId = Guid.Parse(Context.User!.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var character = await db.Characters.FirstOrDefaultAsync(c => c.Id == characterId && c.UserId == userId);
+        var characters = await getCharactersHandler.HandleAsync(new GetCharactersQuery(userId));
+        var character = characters.FirstOrDefault(c => c.Id == characterId);
 
         if (character is null)
         {
@@ -26,7 +26,7 @@ public class GameHub(AppDbContext db) : Hub
         var player = new PlayerState
         {
             ConnectionId = Context.ConnectionId,
-            CharacterId = character.Id,
+            CharacterId = character!.Id,
             Name = character.Name,
             AngelType = character.AngelType,
             X = 0, Y = 0, Z = 0, RotY = 0
