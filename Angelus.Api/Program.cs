@@ -70,7 +70,15 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowCredentials()));
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((doc, ctx, ct) =>
+    {
+        foreach (var server in doc.Servers ?? [])
+            server.Url = server.Url?.TrimEnd('/') ?? server.Url;
+        return Task.CompletedTask;
+    });
+});
 
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("angelus-api"))
@@ -88,10 +96,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-    if (env.IsEnvironment("Test"))
-        await dbContext.Database.EnsureCreatedAsync();
-    else
-        await dbContext.Database.MigrateAsync();
+    await dbContext.Database.EnsureCreatedAsync();
 }
 
 app.MapOpenApi();
