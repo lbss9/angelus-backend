@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Angelus.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Angelus.Infrastructure.Data;
 

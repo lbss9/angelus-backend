@@ -18,7 +18,8 @@ namespace Angelus.Infrastructure.Migrations
                 type: "character varying(10)",
                 maxLength: 10,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
 
         /// <inheritdoc />
@@ -32,7 +33,8 @@ namespace Angelus.Infrastructure.Migrations
                 type: "character varying(7)",
                 maxLength: 7,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
     }
 }

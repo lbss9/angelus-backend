@@ -8,9 +8,7 @@ namespace Angelus.Application.Auth.Commands;
 
 public record RegisterCommand(string Email, string Password);
 
-public class RegisterCommandHandler(
-    IUserRepository userRepository,
-    IJwtService jwtService)
+public class RegisterCommandHandler(IUserRepository userRepository, IJwtService jwtService)
 {
     public async Task<Result<AuthResponse>> HandleAsync(RegisterCommand command)
     {
@@ -20,7 +18,7 @@ public class RegisterCommandHandler(
         var user = new User
         {
             Email = command.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password)
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
         };
 
         await userRepository.AddAsync(user);

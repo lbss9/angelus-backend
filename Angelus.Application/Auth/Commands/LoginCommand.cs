@@ -7,9 +7,7 @@ namespace Angelus.Application.Auth.Commands;
 
 public record LoginCommand(string Email, string Password);
 
-public class LoginCommandHandler(
-    IUserRepository userRepository,
-    IJwtService jwtService)
+public class LoginCommandHandler(IUserRepository userRepository, IJwtService jwtService)
 {
     public async Task<Result<AuthResponse>> HandleAsync(LoginCommand command)
     {

@@ -1,9 +1,9 @@
-using Moq;
-using FluentAssertions;
 using Angelus.Application.Auth.Commands;
 using Angelus.Application.Interfaces;
 using Angelus.Domain.Entities;
 using Angelus.Domain.Interfaces;
+using FluentAssertions;
+using Moq;
 
 namespace Angelus.Tests.Auth;
 
@@ -24,7 +24,7 @@ public class LoginCommandHandlerTests
         var user = new User
         {
             Email = "angel@test.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123")
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
         };
         _userRepo.Setup(r => r.GetByEmailAsync("angel@test.com")).ReturnsAsync(user);
         _jwtService.Setup(j => j.GenerateToken(user)).Returns("jwt-token");
@@ -41,11 +41,13 @@ public class LoginCommandHandlerTests
         var user = new User
         {
             Email = "angel@test.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("correct-password")
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("correct-password"),
         };
         _userRepo.Setup(r => r.GetByEmailAsync("angel@test.com")).ReturnsAsync(user);
 
-        var result = await _handler.HandleAsync(new LoginCommand("angel@test.com", "wrong-password"));
+        var result = await _handler.HandleAsync(
+            new LoginCommand("angel@test.com", "wrong-password")
+        );
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().Be("Email ou senha inválidos.");

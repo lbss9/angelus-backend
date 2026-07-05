@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 using System.Security.Claims;
+using Angelus.Application.Characters.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Angelus.Application.Characters.Queries;
 
 namespace Angelus.Api.Hubs;
 
@@ -29,7 +29,10 @@ public class GameHub(GetCharactersQueryHandler getCharactersHandler) : Hub
             CharacterId = character!.Id,
             Name = character.Name,
             AngelType = character.AngelType,
-            X = 0, Y = 0, Z = 0, RotY = 0
+            X = 0,
+            Y = 0,
+            Z = 0,
+            RotY = 0,
         };
 
         Players[Context.ConnectionId] = player;
@@ -40,31 +43,46 @@ public class GameHub(GetCharactersQueryHandler getCharactersHandler) : Hub
 
     public async Task Move(float x, float y, float z, float rotY)
     {
-        if (!Players.TryGetValue(Context.ConnectionId, out var player)) return;
+        if (!Players.TryGetValue(Context.ConnectionId, out var player))
+            return;
 
-        player.X = x; player.Y = y; player.Z = z; player.RotY = rotY;
+        player.X = x;
+        player.Y = y;
+        player.Z = z;
+        player.RotY = rotY;
 
-        await Clients.Others.SendAsync("PlayerMoved", new
-        {
-            id = player.CharacterId,
-            x = player.X, y = player.Y, z = player.Z, rotY = player.RotY
-        });
+        await Clients.Others.SendAsync(
+            "PlayerMoved",
+            new
+            {
+                id = player.CharacterId,
+                x = player.X,
+                y = player.Y,
+                z = player.Z,
+                rotY = player.RotY,
+            }
+        );
     }
 
     public async Task SendChat(string message)
     {
-        if (!Players.TryGetValue(Context.ConnectionId, out var player)) return;
-        if (string.IsNullOrWhiteSpace(message)) return;
+        if (!Players.TryGetValue(Context.ConnectionId, out var player))
+            return;
+        if (string.IsNullOrWhiteSpace(message))
+            return;
 
         message = message.Length > 200 ? message[..200] : message;
 
-        await Clients.All.SendAsync("ChatMessage", new
-        {
-            characterName = player.Name,
-            angelType = player.AngelType,
-            message,
-            timestamp = DateTime.UtcNow
-        });
+        await Clients.All.SendAsync(
+            "ChatMessage",
+            new
+            {
+                characterName = player.Name,
+                angelType = player.AngelType,
+                message,
+                timestamp = DateTime.UtcNow,
+            }
+        );
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)

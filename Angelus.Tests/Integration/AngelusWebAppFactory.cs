@@ -25,12 +25,16 @@ public class AngelusWebAppFactory : WebApplicationFactory<Program>, IAsyncLifeti
         builder.ConfigureServices(services =>
         {
             // Remove o DbContext registrado pelo DependencyInjection
-            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            if (descriptor != null) services.Remove(descriptor);
+            var descriptor = services.SingleOrDefault(d =>
+                d.ServiceType == typeof(DbContextOptions<AppDbContext>)
+            );
+            if (descriptor != null)
+                services.Remove(descriptor);
 
             // Registra com a connection string do container
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(_postgres.GetConnectionString()));
+                options.UseNpgsql(_postgres.GetConnectionString())
+            );
         });
 
         builder.UseEnvironment("Test");

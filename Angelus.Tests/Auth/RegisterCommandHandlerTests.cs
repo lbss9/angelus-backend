@@ -1,9 +1,9 @@
-using Moq;
-using FluentAssertions;
 using Angelus.Application.Auth.Commands;
 using Angelus.Application.Interfaces;
 using Angelus.Domain.Entities;
 using Angelus.Domain.Interfaces;
+using FluentAssertions;
+using Moq;
 
 namespace Angelus.Tests.Auth;
 
@@ -25,7 +25,9 @@ public class RegisterCommandHandlerTests
         _userRepo.Setup(r => r.AddAsync(It.IsAny<User>())).Returns(Task.CompletedTask);
         _jwtService.Setup(j => j.GenerateToken(It.IsAny<User>())).Returns("jwt-token");
 
-        var result = await _handler.HandleAsync(new RegisterCommand("angel@test.com", "password123"));
+        var result = await _handler.HandleAsync(
+            new RegisterCommand("angel@test.com", "password123")
+        );
 
         result.IsSuccess.Should().BeTrue();
         result.Value!.Token.Should().Be("jwt-token");
@@ -36,7 +38,9 @@ public class RegisterCommandHandlerTests
     {
         _userRepo.Setup(r => r.ExistsByEmailAsync("angel@test.com")).ReturnsAsync(true);
 
-        var result = await _handler.HandleAsync(new RegisterCommand("angel@test.com", "password123"));
+        var result = await _handler.HandleAsync(
+            new RegisterCommand("angel@test.com", "password123")
+        );
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().Be("Email já cadastrado.");

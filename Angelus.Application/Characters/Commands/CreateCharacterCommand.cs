@@ -14,7 +14,9 @@ public class CreateCharacterCommandHandler(ICharacterRepository characterReposit
     public async Task<Result<CharacterResponse>> HandleAsync(CreateCharacterCommand command)
     {
         if (!ValidAngelTypes.Contains(command.AngelType))
-            return Result<CharacterResponse>.Failure("Tipo de anjinho inválido. Use: sol, lua ou rosa.");
+            return Result<CharacterResponse>.Failure(
+                "Tipo de anjinho inválido. Use: sol, lua ou rosa."
+            );
 
         if (await characterRepository.UserHasCharacterAsync(command.UserId))
             return Result<CharacterResponse>.Failure("Você já possui um personagem.");
@@ -26,12 +28,18 @@ public class CreateCharacterCommandHandler(ICharacterRepository characterReposit
         {
             UserId = command.UserId,
             Name = command.Name,
-            AngelType = command.AngelType
+            AngelType = command.AngelType,
         };
 
         await characterRepository.AddAsync(character);
 
         return Result<CharacterResponse>.Success(
-            new CharacterResponse(character.Id, character.Name, character.AngelType, character.CreatedAt));
+            new CharacterResponse(
+                character.Id,
+                character.Name,
+                character.AngelType,
+                character.CreatedAt
+            )
+        );
     }
 }
