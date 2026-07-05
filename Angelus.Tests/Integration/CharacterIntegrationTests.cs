@@ -17,7 +17,7 @@ public class CharacterIntegrationTests(AngelusWebAppFactory factory)
 
     private async Task<string> RegisterAndLoginAsync(string email = "char@angelus.com")
     {
-        var payload = new { email, password = "senha123" };
+        var payload = new { email, password = "Senha@123" };
         var response = await _client.PostAsJsonAsync("/api/auth/register", payload);
         var body = await response.Content.ReadFromJsonAsync<TokenResponse>();
         return body!.Token;

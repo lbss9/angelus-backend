@@ -19,7 +19,7 @@ public class AuthIntegrationTests(AngelusWebAppFactory factory)
     {
         var response = await _client.PostAsJsonAsync(
             "/api/auth/register",
-            new { email = "serafim@angelus.com", password = "senha123" }
+            new { email = "serafim@angelus.com", password = "Senha@123" }
         );
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -32,7 +32,7 @@ public class AuthIntegrationTests(AngelusWebAppFactory factory)
     [Fact]
     public async Task Register_DuplicateEmail_Returns409()
     {
-        var payload = new { email = "duplicado@angelus.com", password = "senha123" };
+        var payload = new { email = "duplicado@angelus.com", password = "Senha@123" };
         await _client.PostAsJsonAsync("/api/auth/register", payload);
 
         var response = await _client.PostAsJsonAsync("/api/auth/register", payload);
@@ -43,7 +43,7 @@ public class AuthIntegrationTests(AngelusWebAppFactory factory)
     [Fact]
     public async Task Login_ValidCredentials_Returns200WithToken()
     {
-        var payload = new { email = "login@angelus.com", password = "senha123" };
+        var payload = new { email = "login@angelus.com", password = "Senha@123" };
         await _client.PostAsJsonAsync("/api/auth/register", payload);
 
         var response = await _client.PostAsJsonAsync("/api/auth/login", payload);

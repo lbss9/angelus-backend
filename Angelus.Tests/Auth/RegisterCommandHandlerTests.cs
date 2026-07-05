@@ -26,7 +26,7 @@ public class RegisterCommandHandlerTests
         _jwtService.Setup(j => j.GenerateToken(It.IsAny<User>())).Returns("jwt-token");
 
         var result = await _handler.HandleAsync(
-            new RegisterCommand("angel@test.com", "password123")
+            new RegisterCommand("angel@test.com", "Password@123")
         );
 
         result.IsSuccess.Should().BeTrue();
@@ -39,7 +39,7 @@ public class RegisterCommandHandlerTests
         _userRepo.Setup(r => r.ExistsByEmailAsync("angel@test.com")).ReturnsAsync(true);
 
         var result = await _handler.HandleAsync(
-            new RegisterCommand("angel@test.com", "password123")
+            new RegisterCommand("angel@test.com", "Password@123")
         );
 
         result.IsSuccess.Should().BeFalse();

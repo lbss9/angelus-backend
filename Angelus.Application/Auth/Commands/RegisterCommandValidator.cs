@@ -1,5 +1,6 @@
-using Angelus.Application.Auth.Commands;
 using FluentValidation;
+
+namespace Angelus.Application.Auth.Commands;
 
 public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {

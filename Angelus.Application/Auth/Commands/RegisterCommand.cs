@@ -10,8 +10,14 @@ public record RegisterCommand(string Email, string Password);
 
 public class RegisterCommandHandler(IUserRepository userRepository, IJwtService jwtService)
 {
+    private static readonly RegisterCommandValidator _validator = new();
+
     public async Task<Result<AuthResponse>> HandleAsync(RegisterCommand command)
     {
+        var validation = await _validator.ValidateAsync(command);
+        if (!validation.IsValid)
+            return Result<AuthResponse>.Failure(validation.Errors[0].ErrorMessage);
+
         if (await userRepository.ExistsByEmailAsync(command.Email))
             return Result<AuthResponse>.Failure("Email já cadastrado.");
 
